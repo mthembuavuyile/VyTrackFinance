@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VyTrack Finance - Track Your Personal Finance Easily</title>
+    <meta name="description" content="VyTrack Finance is a personal finance tracker that helps you manage income, expenses, and budgeting for better financial control and savings.">
+    <meta name="keywords" content="VyTrack, finance tracker, personal finance, income tracking, expense tracking, budgeting tool, savings">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <div class="header-content">
+            <div class="logo">
+                <i class="fas fa-wallet" aria-hidden="true"></i>
+                <span>VyTrack Finance</span>
+            </div>
+            <div id="burger-menu" aria-label="Toggle menu">
+                <i class="fas fa-bars"></i>
+            </div>
+            <nav id="main-nav">
+                <a href="#dashboard"><i class="fas fa-chart-line"></i> Dashboard</a>
+                <a href="#transactions"><i class="fas fa-exchange-alt"></i> Transactions</a>
+                <a href="#budget"><i class="fas fa-piggy-bank"></i> Budget</a>
+                <a href="#reports"><i class="fas fa-chart-pie"></i> Reports</a>
+            </nav>
+            <div class="profile">
+                <div id="profile-icon">👤</div>
+                <div id="profile-dropdown">
+                    <div class="form-group">
+                        <label for="profile-name-input">Your Name</label>
+                        <input type="text" id="profile-name-input" placeholder="Enter your name" aria-label="Profile Name Input">
+                    </div>
+                    <button onclick="saveName()">Save</button>
+                    <hr style="margin: 1rem 0">
+                    <button onclick="exportData()" style="background-color: var(--success-color)">
+                        <i class="fas fa-download"></i> Export Data
+                    </button>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <section id="dashboard" class="section">
+            <h1>Dashboard - Personal Finance Overview</h1>
+            <article class="card">
+                <h2 class="card-title">Financial Overview</h2>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                    <div>
+                        <label>Total Income</label>
+                        <div id="total-income" style="font-size: 1.5rem; color: var(--success-color)">$0.00</div>
+                    </div>
+                    <div>
+                        <label>Total Expenses</label>
+                        <div id="total-expenses" style="font-size: 1.5rem; color: var(--danger-color)">$0.00</div>
+                    </div>
+                    <div>
+                        <label>Balance</label>
+                        <div id="balance" style="font-size: 1.5rem;">$0.00</div>
+                    </div>
+                    <div>
+                        <label>Savings Rate</label>
+                        <div id="savings-rate" style="font-size: 1.5rem;">0%</div>
+                    </div>
+                </div>
+            </article>
+
+            <article class="card">
+                <h2 class="card-title">Recent Transactions</h2>
+                <div id="transactions-list" aria-live="polite"></div>
+            </article>
+
+            <article class="card">
+                <h2 class="card-title">Budget Progress</h2>
+                <div id="budget-progress" aria-live="polite"></div>
+            </article>
+        </section>
+
+        <section id="transactions" class="section">
+            <h1>Manage Transactions</h1>
+            <article class="card">
+                <h2 class="card-title">Add New Transaction</h2>
+                <form id="transaction-form">
+                    <div class="form-group">
+                        <label>Type</label>
+                        <select id="transaction-type" required aria-label="Transaction Type">
+                            <option value="">Select Type</option>
+                            <option value="income">Income</option>
+                            <option value="expense">Expense</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Description</label>
+                        <input type="text" id="transaction-description" required placeholder="Enter description" aria-label="Transaction Description">
+                    </div>
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="transaction-category" required aria-label="Transaction Category">
+                            <option value="">Select Category</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Subcategory</label>
+                        <select id="transaction-subcategory" aria-label="Transaction Subcategory">
+                            <option value="">Select Subcategory</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" id="transaction-amount" required min="0" step="0.01" placeholder="Enter amount" aria-label="Transaction Amount">
+                    </div>
+                    <div class="form-group">
+                        <label>Date</label>
+                        <input type="date" id="transaction-date" required aria-label="Transaction Date">
+                    </div>
+                    <button type="submit">Add Transaction</button>
+                </form>
+            </article>
+        </section>
+
+        <section id="budget" class="section">
+            <h1>Set and Manage Budgets</h1>
+            <article class="card">
+                <h2 class="card-title">Create a Budget</h2>
+                <form id="budget-form">
+                    <div class="form-group">
+                        <label>Category</label>
+                        <select id="budget-category" required aria-label="Budget Category">
+                            <option value="">Select Category</option>
+                            <option value="food">Food</option>
+                            <option value="transportation">Transportation</option>
+                            <option value="housing">Housing</option>
+                            <option value="entertainment">Entertainment</option>
+                            <option value="utilities">Utilities</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Amount</label>
+                        <input type="number" id="budget-amount" required min="0" step="0.01" placeholder="Enter budget amount" aria-label="Budget Amount">
+                    </div>
+                    <div class="form-group">
+                        <label>Period</label>
+                        <select id="budget-period" aria-label="Budget Period">
+                            <option value="monthly">Monthly</option>
+                            <option value="yearly">Yearly</option>
+                        </select>
+                    </div>
+                    <button type="submit">Set Budget</button>
+                </form>
+            </article>
+
+            <article class="card">
+                <h2 class="card-title">Budget Overview</h2>
+                <div id="budget-progress" aria-live="polite"></div>
+            </article>
+        </section>
+
+        <section id="reports" class="section">
+            <h1>Financial Reports</h1>
+            <article class="card">
+                <h2 class="card-title">Generate Financial Reports</h2>
+                <p id="report-message" style="margin-bottom: 2rem;"></p>
+                
+                <h2 class="card-title">Expense Distribution Chart</h2>
+                <div class="chart-container">
+                    <canvas id="expense-chart" aria-label="Expense Distribution Chart"></canvas>
+                </div>
+
+                <h2 class="card-title">Monthly Financial Overview</h2>
+                <div class="chart-container">
+                    <canvas id="monthly-chart" aria-label="Monthly Financial Chart"></canvas>
+                </div>
+            </article>
+        </section>
+    </main>
+
+    <footer>
+        <p>By <a href="https://mthembuavuyile.github.io/VylexNexys/" target="_blank" rel="noopener noreferrer">Vylex Nexys</a></p>
+    </footer>
+
+    <script src="script.js"></script>
+
+</body>
+
+</html>
